@@ -1,0 +1,33 @@
+<!-- templates/base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Homepage{% endblock %}</title>
+    <!-- Load static files -->
+    {% load static %}
+    
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    {% if request.path == '/tasks/' %}
+    <div class="right-align-container">
+        <a href="/create-user/">
+            <button class="create-user-btn">Create User</button>
+        </a>
+    </div>
+    {% endif %}
+
+
+    <div class="content">
+        {% block content %}
+        <!-- Page content will go here -->
+        {% endblock %}
+    </div>
+
+</body>
+</html>

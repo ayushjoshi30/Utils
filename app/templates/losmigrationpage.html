@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="upload-file-title">LOS Migration</h2>
+
+    <div class="losmigration-form-container">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- File Input Field -->
+            <div class="form-group">
+                <label for="{{ form.file.id_for_label }}" class="{% if form.file.required %}required-label{% endif %} centered-label">
+                    {{ form.file.label }}
+                </label>
+                {{ form.file }}
+                
+                {% if form.file.errors %}
+                    <ul class="error-list">
+                        {% for error in form.file.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="upload-button-container">
+                <button type="submit" class="create-user-btn">Upload File</button>
+            </div>
+        </form>
+    </div>
+
+    {% if uploaded_file %}
+        <!-- Show Convert to JSON Button only if an Excel file is uploaded -->
+        <div class="center-button">
+            <form method="POST" action="{% url 'convert_to_json' %}">
+                {% csrf_token %}
+                <button type="submit" name="convert_to_json" class="create-user-btn">Process the uploaded excel</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

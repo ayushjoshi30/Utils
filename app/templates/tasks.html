@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="tasks-heading">TASKS</h1>
+
+    <div class="card-container">
+        <a href="{% url 'losmigration' %}" class="card-link">
+        <div class="card">
+            <div class="card-image">
+                <img src="/media/task_images/losmigration.jpg" alt="Los Migration">
+            </div>
+            <div class="card-content">
+                <h3>Los Migration</h3>
+                <p>Short description of task 1</p>
+            </div>
+        </div>
+        </a>
+        <div class="card">
+            <div class="card-image">
+                <img src="/media/task_images/SOP Automation.jpg" alt="SOP Automation">
+            </div>
+            <div class="card-content">
+                <h3>SOP Automation</h3>
+                <p>Short description of task 2</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-image">
+                <img src="/media/task_images/AccountingMigration.jpg" alt="Accounting Migration">
+            </div>
+            <div class="card-content">
+                <h3>Accounting Migration</h3>
+                <p>Short description of task 3</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-image">
+                <img src="/media/task_images/POScompare.png" alt="POS Compare">
+            </div>
+            <div class="card-content">
+                <h3>POS Compare</h3>
+                <p>Short description of task 4</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-image">
+                <img src="/media/task_images/Repayments.jpg" alt="Repayments">
+            </div>
+            <div class="card-content">
+                <h3>Repayments</h3>
+                <p>Short description of task 5</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-image">
+                <img src="https://via.placeholder.com/300" alt="LMS MIGRATION">
+            </div>
+            <div class="card-content">
+                <h3>LMS MIGRATION</h3>
+                <p>Short description of task 6</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
