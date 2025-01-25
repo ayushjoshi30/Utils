@@ -1,0 +1,4 @@
+host='uat.kugelblitz.xyz'
+database='fineract_careindia'
+user='root'
+password='skdcnwauicn2ucnaecasdsajdnizucawencascdca'

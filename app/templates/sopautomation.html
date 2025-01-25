@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divs and Button Layout</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .box {
+            width: 45%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: lightblue;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+
+        .left {
+            background-color: lightcoral;
+        }
+
+        .right {
+            background-color: lightgreen;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .start-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .start-button.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form method="POST" action="{% url 'sopautomation' %}">
+            {% csrf_token %}
+            <!-- Left Box: Source -->
+            <div class="box left">
+                <h2>Source</h2>
+                <select id="source-server" name="source-server" onchange="fetchTenants('source'); checkSelection();">
+                    <option value="">Select Server</option>
+                    <option value="Localhost" {% if selected_source_server == 'Localhost' %}selected{% endif %}>Localhost</option>
+                    <option value="Demo" {% if selected_source_server == 'Demo' %}selected{% endif %}>Demo</option>
+                    <option value="Prod" {% if selected_source_server == 'Prod' %}selected{% endif %}>Prod</option>
+                    <option value="UAT" {% if selected_source_server == 'UAT' %}selected{% endif %}>UAT</option>
+                </select>
+                <select id="source-tenant" name="source-tenant" style="display:none;" onchange="checkSelection()">
+                    <option value="">-- Select Tenant --</option>
+                    {% for tenant in source_tenants %}
+                        <option value="{{ tenant.name }}" {% if selected_source_tenant == tenant.name %}selected{% endif %}>{{ tenant.name }}</option>
+                    {% empty %}
+                        <option value="">No tenants available</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Start Button -->
+            <button id="start-button" class="start-button" disabled name="start-sop-automation" action="{% url 'sopautomation' %}">Start</button>
+
+            <!-- Right Box: Destination -->
+            <div class="box right">
+                <h2>Destination</h2>
+                <select id="destination-server" name="destination-server" onchange="fetchTenants('destination'); checkSelection();">
+                    <option value="">Select Server</option>
+                    <option value="Localhost" {% if selected_destination_server == 'Localhost' %}selected{% endif %}>Localhost</option>
+                    <option value="Demo" {% if selected_destination_server == 'Demo' %}selected{% endif %}>Demo</option>
+                    <option value="Prod" {% if selected_destination_server == 'Prod' %}selected{% endif %}>Prod</option>
+                    <option value="UAT" {% if selected_destination_server == 'UAT' %}selected{% endif %}>UAT</option>
+                </select>
+                <select id="destination-tenant" name="destination-tenant" style="display:none;" onchange="checkSelection()">
+                    <option value="">-- Select Tenant --</option>
+                    {% for tenant in destination_tenants %}
+                        <option value="{{ tenant.name }}" {% if selected_destination_tenant == tenant.name %}selected{% endif %}>{{ tenant.name }}</option>
+                    {% empty %}
+                        <option value="">No tenants available</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Fetch tenants using AJAX when a server is selected
+        function fetchTenants(type) {
+            const server = document.getElementById(type + '-server').value;
+            const tenantDropdown = document.getElementById(type + '-tenant');
+            
+            if (server) {
+                fetch(`/get-tenants/?server_type=${type}&server=${server}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Clear existing options
+                        tenantDropdown.innerHTML = '<option value="">-- Select Tenant --</option>';
+                        // Populate new options
+                        data.tenants.forEach(tenant => {
+                            const option = document.createElement('option');
+                            option.value = tenant;
+                            option.textContent = tenant;
+                            tenantDropdown.appendChild(option);
+                        });
+                        // Show the tenant dropdown
+                        tenantDropdown.style.display = 'block';
+                    })
+                    .catch(error => {
+                        console.error('Error fetching tenants:', error);
+                    });
+            } else {
+                tenantDropdown.style.display = 'none';
+            }
+        }
+
+        // Check if all selections (server and tenant) are made, and enable the start button if true
+        function checkSelection() {
+            const sourceServer = document.getElementById('source-server').value;
+            const sourceTenant = document.getElementById('source-tenant').value;
+            const destinationServer = document.getElementById('destination-server').value;
+            const destinationTenant = document.getElementById('destination-tenant').value;
+
+            const startButton = document.getElementById('start-button');
+            if (sourceServer && sourceTenant && destinationServer && destinationTenant) {
+                startButton.classList.add('active');
+                startButton.disabled = false;
+            } else {
+                startButton.classList.remove('active');
+                startButton.disabled = true;
+            }
+        }
+
+        // Initial call to set the correct state of the dropdowns
+        document.addEventListener("DOMContentLoaded", function() {
+            checkSelection();
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

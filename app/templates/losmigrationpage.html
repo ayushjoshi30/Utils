@@ -1,52 +1,103 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2 class="upload-file-title">LOS Migration</h2>
-
-    <div class="losmigration-form-container">
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <!-- File Input Field -->
-            <div class="form-group">
-                <label for="{{ form.file.id_for_label }}" class="{% if form.file.required %}required-label{% endif %} centered-label">
-                    {{ form.file.label }}
-                </label>
-                {{ form.file }}
-                
-                {% if form.file.errors %}
-                    <ul class="error-list">
-                        {% for error in form.file.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
-
-            <!-- Submit Button -->
-            <div class="upload-button-container">
-                <button type="submit" class="create-user-btn">Upload File</button>
-            </div>
-        </form>
-    </div>
-
-    {% if uploaded_file %}
-        <!-- Show Convert to JSON Button only if an Excel file is uploaded -->
-        <div class="center-button">
-            <form method="POST" action="{% url 'convert_to_json' %}">
-                {% csrf_token %}
-                <button type="submit" name="convert_to_json" class="create-user-btn">Process the uploaded excel</button>
-            </form>
-        </div>
-    {% endif %}
-
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
+    <div class="los-migration-form-container">
+        <!-- Heading Section Card -->
+        <div class="card">
+            <div class="los-migration-form-container">
+                <div class="text-container">
+                    <h2 class="main-heading">LOS Migration</h2>
+                    <p class="description">
+                        Upload your files for the LOS Migration process. Select the server and tenant to begin the migration.
+                    </p>
                 </div>
-            {% endfor %}
+                <div class="image-container">
+                    <img src="/media/task_images/losmigration.jpg" alt="LOS Migration Image" class="heading-image">
+                </div>
+            </div>
         </div>
-    {% endif %}
+
+        <!-- File Upload Form Card -->
+        <div class="card">
+            <div class="los-migration-form-container">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!-- File Input Field -->
+                    <div class="form-group">
+                        <label for="{{ form.file.id_for_label }}" class="{% if form.file.required %}required-label{% endif %} centered-label">
+                            {{ form.file.label }}
+                        </label>
+                        {{ form.file }}
+                        
+                        {% if form.file.errors %}
+                            <ul class="error-list">
+                                {% for error in form.file.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <!-- Submit Button for File Upload -->
+                    <div class="upload-button-container">
+                        <button type="submit" class="btn upload-btn">Upload File</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if uploaded_file or tenants %}
+            <!-- Server and Tenant Selection Card -->
+            <div class="card">
+                <div class="los-migration-form-container">
+                    <form method="POST" action="{% url 'losmigration' %}">
+                        {% csrf_token %}
+                        <!-- Server Selection Dropdown -->
+                        <div class="form-group">
+                            <label for="server">Select Server:</label>
+                            <select id="server" name="server" onchange="this.form.submit()" class="select-input">
+                                <option value="">-- Select Server --</option>
+                                <option value="localhost">Localhost</option>
+                                <option value="prod">Prod</option>
+                                <option value="demo" >Demo</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="los-migration-form-container">
+                    <form method="POST" action="{% url 'losmigration' %}">
+                        {% csrf_token %}
+                        <!-- Tenant Selection Dropdown -->
+                        <div class="form-group">
+                            <label for="tenant">Select Tenant:</label>
+                            <select id="tenant" name="tenant" class="select-input">
+                                <option value="">-- Select Tenant --</option>
+                                {% for tenant in tenants %}
+                                    <option value="{{ tenant.name }}" {% if selected_tenant == tenant.name %}selected{% endif %}>{{ tenant.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Start Migration Button -->
+                        <div class="upload-button-container">
+                            <button type="submit" name="los_migration_start" class="btn start-migration-btn">Start Migration</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

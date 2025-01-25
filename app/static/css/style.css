@@ -152,12 +152,24 @@ button:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
+losmigration-card{
+    position: relative;
+    background-color: #001aff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.losmigration-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
 /* Hover effect for the cards */
 .card:hover {
     transform: translateY(-10px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
+
 .create-user-form-container {
     display: flex;
     justify-content: center;  /* Center horizontally */
@@ -171,6 +183,7 @@ button:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Subtle shadow for a 3D effect */
     margin: auto;             /* Center the box horizontally */
 }
+
 /* Card Image Styling */
 .card-image {
     width: 100%;

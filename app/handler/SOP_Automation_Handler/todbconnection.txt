@@ -1,0 +1,4 @@
+host='localhost'
+database='fineract_careindia'
+user='root'
+password='root'
